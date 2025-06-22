@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Add New Driver</h2>
+<form method="POST">
+    <div class="mb-3">
+        <input type="text" name="name" class="form-control" placeholder="Driver Name" required>
+    </div>
+    <div class="mb-3">
+        <input type="text" name="truck_number" class="form-control" placeholder="Truck Number" required>
+    </div>
+    <div class="mb-3">
+        <input type="text" name="phone" class="form-control" placeholder="Phone Number" required>
+    </div>
+    <button class="btn btn-success">Add Driver</button>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

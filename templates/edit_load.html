@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Edit Load</h2>
+<form method="POST">
+    <div class="mb-3">
+        <input type="text" name="pickup" class="form-control" value="{{ load.pickup }}" required>
+    </div>
+    <div class="mb-3">
+        <input type="text" name="drop" class="form-control" value="{{ load.drop }}" required>
+    </div>
+    <div class="mb-3">
+        <input type="date" name="date" class="form-control" value="{{ load.date }}" required>
+    </div>
+    <div class="mb-3">
+        <select name="status" class="form-control" required>
+            {% for status in ['Live', 'Drop/Hook', 'Pending', 'Delivered'] %}
+                <option value="{{ status }}" {% if load.status == status %}selected{% endif %}>{{ status }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <select name="driver_id" class="form-control">
+            <option value="">Assign to Driver (optional)</option>
+            {% for d in drivers %}
+                <option value="{{ d.id }}" {% if d.id == load.driver_id %}selected{% endif %}>{{ d.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button class="btn btn-warning">Update Load</button>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

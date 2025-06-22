@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="mb-4">🚚 LoadPilot - Dispatcher Dashboard</h2>
+
+<div class="d-flex justify-content-between mb-3">
+    <a href="{{ url_for('logout') }}" class="btn btn-outline-warning">Logout</a>
+    <div>
+        <a href="{{ url_for('add_driver') }}" class="btn btn-success me-2">+ Add Driver</a>
+        <a href="{{ url_for('add_load') }}" class="btn btn-primary">+ Add Load</a>
+    </div>
+</div> 
+
+<!-- Cards Section -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card bg-secondary text-white">
+            <div class="card-body">
+                <h5>Total Drivers</h5>
+                <h3>{{ drivers|length }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h5>Total Loads</h5>
+                <h3>{{ loads|length }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h5>Active Loads</h5>
+                <h3>{{ loads|selectattr("status", "equalto", "Live")|list|length }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart Section -->
+<div class="card mb-4">
+  <div class="card-body">
+    <h5 class="card-title">📊 Load Status Overview</h5>
+    <div class="row">
+      <!-- Pie Chart -->
+      <div class="col-md-6">
+        <canvas id="statusChart" style="max-width: 100%; height: 300px;"></canvas>
+      </div>
+
+      <!-- Quick Tips -->
+<div class="col-md-6">
+  <div class="card bg-dark text-white">
+    <div class="card-body">
+      <h6 class="card-title">🧠 Quick Tips</h6>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item bg-dark text-light border-secondary">Use filters to search loads by pickup/drop.</li>
+        <li class="list-group-item bg-dark text-light border-secondary">Green = Live | Blue = Drop/Hook.</li>
+        <li class="list-group-item bg-dark text-light border-secondary">Click “Edit” to change load or driver info.</li>
+        <li class="list-group-item bg-dark text-light border-secondary">Use export or charts to analyze loads.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const statusLabels = {{ status_counts.keys() | list | tojson | safe }};
+    const statusValues = {{ status_counts.values() | list | tojson | safe }};
+
+    const ctx = document.getElementById('statusChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: statusLabels,
+            datasets: [{
+                data: statusValues,
+                backgroundColor: ['#198754', '#0dcaf0', '#ffc107', '#6c757d'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>
+
+<!--Filter-->
+<form method="GET" class="d-flex mb-4 gap-2 bg-dark p-3 rounded border border-secondary align-items-center">
+    <!-- Status Dropdown -->
+    <select name="status" class="form-select text-light bg-dark border-secondary" style="max-width: 200px; padding-right: 30px;">
+        <option value="All" {% if status_filter == "All" %}selected{% endif %}>All</option>
+        {% for status in status_counts.keys() %}
+            <option value="{{ status }}" {% if status_filter == status %}selected{% endif %}>{{ status }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Search Input with Light Placeholder -->
+  <input type="text" name="search" class="form-control text-white border border-light bg-transparent"
+       placeholder="Type pickup or drop location" value="{{ search_query or '' }}" style="max-width: 300px;">
+
+    <!-- Buttons -->
+    <button class="btn btn-outline-light">🔍 Filter</button>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light">♻️ Reset</a>
+</form>
+
+<!-- Driver Table -->
+<h4>🧑‍✈️ Drivers</h4>
+<table class="table table-dark table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Truck No.</th>
+            <th>Phone</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for d in drivers %}
+        <tr>
+            <td>{{ d.name }}</td>
+            <td>{{ d.truck_number }}</td>
+            <td>{{ d.phone }}</td>
+            <td>
+                <a href="{{ url_for('edit_driver', driver_id=d.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                <a href="{{ url_for('delete_driver', driver_id=d.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Load Table -->
+<h4 class="mt-5">📦 Loads</h4>
+<table class="table table-dark table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>Status</th>
+            <th>Pickup</th>
+            <th>Drop</th>
+            <th>Driver</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for l in loads %}
+        <tr>
+            <td>
+                {% if l.status == 'Live' %}
+                    <span class="badge bg-success">{{ l.status }}</span>
+                {% elif l.status == 'Drop/Hook' %}
+                    <span class="badge bg-primary">{{ l.status }}</span>
+                {% elif l.status == 'Pending' %}
+                    <span class="badge bg-warning text-dark">{{ l.status }}</span>
+                {% else %}
+                    <span class="badge bg-secondary">{{ l.status }}</span>
+                {% endif %}
+            </td>
+            <td>{{ l.pickup }}</td>
+            <td>{{ l.drop }}</td>
+            <td>
+                {% for d in drivers %}
+                    {% if d.id == l.driver_id %}
+                        {{ d.name }}
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>{{ l.date }}</td>
+            <td>
+                <a href="{{ url_for('edit_load', load_id=l.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                <a href="{{ url_for('delete_load', load_id=l.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this load?')">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

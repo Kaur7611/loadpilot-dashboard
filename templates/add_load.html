@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Add New Load</h2>
+<form method="POST">
+    <div class="mb-3">
+        <input type="text" name="pickup" class="form-control" placeholder="Pickup Location" required>
+    </div>
+    <div class="mb-3">
+        <input type="text" name="drop" class="form-control" placeholder="Drop Location" required>
+    </div>
+    <div class="mb-3">
+        <input type="date" name="date" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <select name="status" class="form-control" required>
+            <option value="">Select Status</option>
+            <option value="Live">Live</option>
+            <option value="Drop/Hook">Drop/Hook</option>
+            <option value="Pending">Pending</option>
+            <option value="Delivered">Delivered</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <select name="driver_id" class="form-control">
+            <option value="">Assign to Driver (optional)</option>
+            {% for driver in drivers %}
+            <option value="{{ driver.id }}">{{ driver.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button class="btn btn-primary">Add Load</button>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

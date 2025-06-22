@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LoadPilot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!DOCTYPE html>
+<html>
+<head>
+    <title>LoadPilot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+/* Common transition for smooth effect */
+select.form-select,
+input.form-control {
+  transition: all 0.3s ease;
+}
+
+/* Dropdown styling */
+select.form-select {
+  color: white;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpath fill='white' d='M4 6l4 4 4-4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 16px;
+  border: 1px solid #fff;
+}
+
+/* Dropdown hover/focus effect */
+select.form-select:hover,
+select.form-select:focus {
+  background-color: #343a40;
+  border-color: #0dcaf0;
+  color: white;
+  outline: none;
+}
+
+/* Input styling */
+input.form-control {
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+}
+
+/* Input hover/focus effect */
+input.form-control:hover,
+input.form-control:focus {
+  background-color: #343a40;
+  border-color: #0dcaf0;
+  color: white;
+  outline: none;
+}
+
+/* Placeholder styling */
+::placeholder {
+  color: white !important;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+input.form-control:focus::placeholder {
+  opacity: 0.4;
+}
+</style>
+
+
+
+
+</head>
+<body class="bg-dark text-white">
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="alert alert-warning">
+              {{ messages[0] }}
+            </div>
+          {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
