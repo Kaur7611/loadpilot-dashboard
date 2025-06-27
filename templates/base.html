@@ -67,6 +67,32 @@ input.form-control:focus {
 input.form-control:focus::placeholder {
   opacity: 0.4;
 }
+.btn-blue {
+  background-color: #007BFF;            /* blue background */
+  color: #ffffff !important;            /* white text */
+  border: 2px solid #ffffff;            /* white border */
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-blue .btn-label {
+  color: #ffffff !important;            /* 👈 Ensures span text is white always */
+}
+
+.btn-blue:hover {
+  background-color: #339cff;            /* lighter blue */
+  color: #ffffff !important;
+  transform: translateY(-2px);
+}
+
 </style>
 
 

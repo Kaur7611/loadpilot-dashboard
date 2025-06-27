@@ -37,12 +37,21 @@
         </div>
     </div>
 </div>
+<!-- Top Export Button -->
+<div class="d-flex justify-content-end mb-3">
+    <a href="{{ url_for('export_loads') }}" class="btn btn-blue">
+  ⬇️ <span class="btn-label">Export</span>
+</a>
+
+
+</div>
 
 <!-- Chart Section -->
 <div class="card mb-4">
   <div class="card-body">
     <h5 class="card-title">📊 Load Status Overview</h5>
     <div class="row">
+        
       <!-- Pie Chart -->
       <div class="col-md-6">
         <canvas id="statusChart" style="max-width: 100%; height: 300px;"></canvas>

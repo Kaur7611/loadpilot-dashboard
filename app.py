@@ -3,6 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from collections import Counter
+from flask import Response
+import csv
+from io import StringIO
+from models import Load 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret-key'
@@ -168,6 +172,25 @@ def delete_load(load_id):
     db.session.delete(load)
     db.session.commit()
     return redirect(url_for('dashboard'))
+
+@app.route('/export_loads')
+def export_loads():
+    # Query all load records using SQLAlchemy
+    loads = Load.query.all()
+
+    # Prepare CSV in memory
+    si = StringIO()
+    cw = csv.writer(si)
+    cw.writerow(['ID', 'Driver ID', 'Pickup', 'Drop', 'Date', 'Status'])  # Header row
+
+    for load in loads:
+        cw.writerow([load.id, load.driver_id, load.pickup, load.drop, load.date, load.status])
+
+    output = si.getvalue()
+    response = Response(output, mimetype='text/csv')
+    response.headers["Content-Disposition"] = "attachment; filename=loads.csv"
+    return response
+
 
 # Run the app
 if __name__ == '__main__':
