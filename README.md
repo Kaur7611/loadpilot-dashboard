@@ -26,7 +26,7 @@ LoadPilot is a Flask-based web dashboard built for trucking company dispatchers.
 
 | Driver & Load Tables | Pie Chart & Quick Tips |
 |-----------------------|------------------------|
-| ![Tables](screenshots/driver-and_load_tables.png) | ![Pie Chart](screenshots/load_status_piechart_tips.png) |
+| ![Tables](screenshots/driver_and_load_tables.png) | ![Pie Chart](screenshots/load_status_piechart_tips.png) |
 
 ---
 
