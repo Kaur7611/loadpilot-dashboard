@@ -20,19 +20,20 @@ LoadPilot is a Flask-based web dashboard built for trucking company dispatchers.
 
 ## 📸 Screenshots
 
-| Login / Register | Dashboard Overview |
-|------------------|--------------------|
-| ![Login](screenshots/login_or_register.png) | ![Dashboard](screenshots/dashboard_overview.png) |
+| **Login** | **Dashboard** |
+|-----------|----------------|
+| ![Login](screenshots/login.jpeg) | ![Dashboard](screenshots/dashboard.jpeg) |
 
-| Driver & Load Tables | Pie Chart & Quick Tips |
-|-----------------------|------------------------|
-| ![Tables](screenshots/driver_and_load_tables.png) | ![Pie Chart](screenshots/load_status_piechart_tips.png) |
+| **Add Driver** | **Edit Driver** |
+|----------------|-----------------|
+| ![Add Driver](screenshots/add_driver.jpeg) | ![Edit Driver](screenshots/edit_driver.jpeg) |
 
----
+| **Add Load** | **Edit Load** |
+|--------------|------------------------|
+| ![Add Load](screenshots/add_load.jpeg) | ![VS Code](screenshots/edit_load.png) |
 
 ## 🚀 How to Run Locally
-
-### 1. Clone the Repository
+# Clone the Repository
 ```bash
 git clone https://github.com/Kaur7611/loadpilot.git
 cd loadpilot
