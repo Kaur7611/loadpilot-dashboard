@@ -1,32 +1,74 @@
 {% extends 'base.html' %}
+{% block title %}Edit Load - LoadPilot{% endblock %}
+
 {% block content %}
-<h2>Edit Load</h2>
-<form method="POST">
-    <div class="mb-3">
-        <input type="text" name="pickup" class="form-control" value="{{ load.pickup }}" required>
+
+<div class="container">
+  <form method="POST">
+  <h2>Edit Load</h2>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select name="status" id="status" required>
+        <option value="Live" {% if load.status == 'Live' %}selected{% endif %}>Live</option>
+        <option value="Drop/Hook" {% if load.status == 'Drop/Hook' %}selected{% endif %}>Drop/Hook</option>
+        <option value="Pending" {% if load.status == 'Pending' %}selected{% endif %}>Pending</option>
+        <option value="Delivered" {% if load.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+      </select>
     </div>
-    <div class="mb-3">
-        <input type="text" name="drop" class="form-control" value="{{ load.drop }}" required>
+
+    <div class="form-group">
+      <label for="pickup">Pickup Location</label>
+      <input 
+        type="text" 
+        name="pickup" 
+        id="pickup" 
+        value="{{ load.pickup }}" 
+        required>
     </div>
-    <div class="mb-3">
-        <input type="date" name="date" class="form-control" value="{{ load.date }}" required>
+
+    <div class="form-group">
+      <label for="drop">Drop Location</label>
+      <input 
+        type="text" 
+        name="drop" 
+        id="drop" 
+        value="{{ load.drop }}" 
+        required>
     </div>
-    <div class="mb-3">
-        <select name="status" class="form-control" required>
-            {% for status in ['Live', 'Drop/Hook', 'Pending', 'Delivered'] %}
-                <option value="{{ status }}" {% if load.status == status %}selected{% endif %}>{{ status }}</option>
-            {% endfor %}
-        </select>
+
+    <div class="form-group">
+      <label for="driver_id">Driver</label>
+      <select name="driver_id" id="driver_id" required>
+        {% for driver in drivers %}
+          <option value="{{ driver.id }}" {% if driver.id == load.driver_id %}selected{% endif %}>
+            {{ driver.name }}
+          </option>
+        {% endfor %}
+      </select>
     </div>
-    <div class="mb-3">
-        <select name="driver_id" class="form-control">
-            <option value="">Assign to Driver (optional)</option>
-            {% for d in drivers %}
-                <option value="{{ d.id }}" {% if d.id == load.driver_id %}selected{% endif %}>{{ d.name }}</option>
-            {% endfor %}
-        </select>
+
+    <div class="form-group">
+      <label for="date">Date</label>
+      <input 
+        type="text" 
+        name="date" 
+        id="date" 
+        value="{{ load.date }}" 
+        required>
     </div>
-    <button class="btn btn-warning">Update Load</button>
-    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
-</form>
+
+    <button type="submit" class="btn-update">Update Load</button>
+    <a href="{{ url_for('dashboard') }}" class="btn-link">Cancel</a>
+  </form>
+</div>
+
 {% endblock %}

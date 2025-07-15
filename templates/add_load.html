@@ -1,34 +1,55 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
-<h2>Add New Load</h2>
-<form method="POST">
-    <div class="mb-3">
-        <input type="text" name="pickup" class="form-control" placeholder="Pickup Location" required>
+
+<div class="container">
+  <form method="POST" action="{{ url_for('add_load') }}">
+    <h2>📦 Add Load</h2>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert">
+          {% for message in messages %}
+            {{ message }}
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="form-group">
+      <input type="text" name="pickup" placeholder="Pickup Location" required>
     </div>
-    <div class="mb-3">
-        <input type="text" name="drop" class="form-control" placeholder="Drop Location" required>
+
+    <div class="form-group">
+      <input type="text" name="drop" placeholder="Drop Location" required>
     </div>
-    <div class="mb-3">
-        <input type="date" name="date" class="form-control" required>
+
+    <div class="form-group">
+      <select name="status" required>
+        <option value="" disabled selected>Select Status</option>
+        <option value="Live">Live</option>
+        <option value="Drop/Hook">Drop/Hook</option>
+        <option value="Pending">Pending</option>
+        <option value="Delivered">Delivered</option>
+      </select>
     </div>
-    <div class="mb-3">
-        <select name="status" class="form-control" required>
-            <option value="">Select Status</option>
-            <option value="Live">Live</option>
-            <option value="Drop/Hook">Drop/Hook</option>
-            <option value="Pending">Pending</option>
-            <option value="Delivered">Delivered</option>
-        </select>
+
+    <div class="form-group">
+      <select name="driver_id" required>
+        <option value="" disabled selected>Assign Driver</option>
+        {% for driver in drivers %}
+          <option value="{{ driver.id }}">{{ driver.name }} - {{ driver.truck_number }}</option>
+        {% endfor %}
+      </select>
     </div>
-    <div class="mb-3">
-        <select name="driver_id" class="form-control">
-            <option value="">Assign to Driver (optional)</option>
-            {% for driver in drivers %}
-            <option value="{{ driver.id }}">{{ driver.name }}</option>
-            {% endfor %}
-        </select>
+
+    <div class="form-group">
+      <input type="date" name="date" required>
     </div>
-    <button class="btn btn-primary">Add Load</button>
-    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
-</form>
+
+    <button type="submit">Add Load</button>
+
+    <a href="{{ url_for('dashboard') }}" class="btn-link">Cancel</a>
+  </form>
+</div>
+
 {% endblock %}

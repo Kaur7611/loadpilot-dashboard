@@ -6,7 +6,6 @@ from collections import Counter
 from flask import Response
 import csv
 from io import StringIO
-from models import Load 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret-key'
@@ -26,6 +25,8 @@ class Driver(db.Model):
     name = db.Column(db.String(100))
     truck_number = db.Column(db.String(50))
     phone = db.Column(db.String(20))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id')) 
+
 
 class Load(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -34,6 +35,7 @@ class Load(db.Model):
     date = db.Column(db.String(20))
     status = db.Column(db.String(50))
     driver_id = db.Column(db.Integer, db.ForeignKey('driver.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))  
 
 # Authentication
 @login_manager.user_loader
@@ -50,11 +52,24 @@ def home():
 def register():
     if request.method == 'POST':
         username = request.form['username']
-        password = generate_password_hash(request.form['password'])
-        db.session.add(User(username=username, password=password))
+        password = request.form['password']
+
+        #  Check if username exists
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            flash('❗ Username already exists. Please choose another one.')
+            return redirect(url_for('register'))
+
+        #  Safe to register new user
+        hashed_password = generate_password_hash(password)
+        new_user = User(username=username, password=hashed_password)
+        db.session.add(new_user)
         db.session.commit()
+        flash('✅ Registered successfully! Please log in.')
         return redirect(url_for('login'))
+
     return render_template('register.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -76,8 +91,8 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    drivers = Driver.query.all()
-    loads = Load.query.all()
+    drivers = Driver.query.filter_by(user_id=current_user.id).all()  
+    loads = Load.query.filter_by(user_id=current_user.id).all()      
 
     status_filter = request.args.get("status", "All")
     search_query = request.args.get("search", "")
@@ -105,12 +120,14 @@ def add_driver():
         new_driver = Driver(
             name=request.form['name'],
             truck_number=request.form['truck_number'],
-            phone=request.form['phone']
+            phone=request.form['phone'],
+            user_id=current_user.id  # 🔑
         )
         db.session.add(new_driver)
         db.session.commit()
         return redirect(url_for('dashboard'))
     return render_template('add_driver.html')
+
 
 @app.route('/edit_driver/<int:driver_id>', methods=['GET', 'POST'])
 @login_required
@@ -136,19 +153,21 @@ def delete_driver(driver_id):
 @app.route('/add_load', methods=['GET', 'POST'])
 @login_required
 def add_load():
-    drivers = Driver.query.all()
+    drivers = Driver.query.filter_by(user_id=current_user.id).all()  
     if request.method == 'POST':
         new_load = Load(
             pickup=request.form['pickup'],
             drop=request.form['drop'],
             date=request.form['date'],
             status=request.form['status'],
-            driver_id=request.form.get('driver_id') or None
+            driver_id=request.form.get('driver_id') or None,
+            user_id=current_user.id  # 🔑
         )
         db.session.add(new_load)
         db.session.commit()
         return redirect(url_for('dashboard'))
     return render_template('add_load.html', drivers=drivers)
+
 
 @app.route('/edit_load/<int:load_id>', methods=['GET', 'POST'])
 @login_required
@@ -174,6 +193,7 @@ def delete_load(load_id):
     return redirect(url_for('dashboard'))
 
 @app.route('/export_loads')
+@login_required
 def export_loads():
     # Query all load records using SQLAlchemy
     loads = Load.query.all()
@@ -181,7 +201,7 @@ def export_loads():
     # Prepare CSV in memory
     si = StringIO()
     cw = csv.writer(si)
-    cw.writerow(['ID', 'Driver ID', 'Pickup', 'Drop', 'Date', 'Status'])  # Header row
+    cw.writerow(['ID', 'Driver ID', 'Pickup', 'Drop', 'Date', 'Status'])  
 
     for load in loads:
         cw.writerow([load.id, load.driver_id, load.pickup, load.drop, load.date, load.status])
@@ -192,8 +212,7 @@ def export_loads():
     return response
 
 
-# Run the app
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
+      db.create_all()
     app.run(debug=True)

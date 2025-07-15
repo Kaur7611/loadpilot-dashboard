@@ -1,17 +1,38 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
-<h2>Add New Driver</h2>
-<form method="POST">
-    <div class="mb-3">
-        <input type="text" name="name" class="form-control" placeholder="Driver Name" required>
+
+<div class="container">
+  <form method="POST" action="{{ url_for('add_driver') }}">
+    <h2>🚛 Add Driver</h2>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert">
+          {% for message in messages %}
+            {{ message }}
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="form-group">
+      <input type="text" name="name" placeholder="Driver Name" required>
     </div>
-    <div class="mb-3">
-        <input type="text" name="truck_number" class="form-control" placeholder="Truck Number" required>
+
+    <div class="form-group">
+      <input type="text" name="truck_number" placeholder="Truck Number" required>
     </div>
-    <div class="mb-3">
-        <input type="text" name="phone" class="form-control" placeholder="Phone Number" required>
+
+    <div class="form-group">
+      <input type="text" name="phone" placeholder="Phone Number" required>
     </div>
-    <button class="btn btn-success">Add Driver</button>
-    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
-</form>
+
+    <button type="submit">Add Driver</button>
+
+    <a href="{{ url_for('dashboard') }}" class="btn-link">Cancel</a>
+  </form>
+</div>
+
 {% endblock %}
+
+
