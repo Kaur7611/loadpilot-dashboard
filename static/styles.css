@@ -1,11 +1,10 @@
-/* -------------------- RESET -------------------- */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* -------------------- BASE -------------------- */
+
 body {
   background: #000;
   color: #f0f0f0;
@@ -13,7 +12,7 @@ body {
   line-height: 1.5;
 }
 
-/* -------------------- FORMS + LOGIN -------------------- */
+
 .container {
   min-height: 100vh;
   display: flex;
@@ -116,7 +115,7 @@ button:hover {
   color: #fff;
 }
 
-/* -------------------- DASHBOARD -------------------- */
+
 
 .dashboard-wrapper {
   max-width: 1200px;
@@ -220,7 +219,7 @@ h1, h2, h3, h5, h6 {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 40px; /* Space between chart and tips */
+  gap: 40px; 
   margin-top: 40px;
 }
 
@@ -258,9 +257,9 @@ h1, h2, h3, h5, h6 {
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 30px;
-  margin: 30px auto; /* Add vertical spacing and auto side margins */
-  justify-content: center; /* Center all children horizontally */
-  max-width: 800px; /* Optional: limit max width for neat look */
+  margin: 30px auto; 
+  justify-content: center; 
+  max-width: 800px; 
 }
 
 .filter-form select,
@@ -349,7 +348,7 @@ table thead {
 .badge.delivered {
   background: #666;
 }
-/* Navbar styling */
+
 .navbar {
   background: #111;
   border-bottom: 2px solid #f33;
@@ -397,7 +396,7 @@ table thead {
 
 
 .page-wrapper {
-  padding: 40px;  /* Space on all sides */
+  padding: 40px;  
 }
 
 @media (max-width: 768px) {
@@ -409,14 +408,14 @@ table thead {
 
 .section-heading {
   text-align: center;
-  color: #f33; /* Neon red */
-  font-weight: 900; /* Extra bold */
-  text-shadow: 0 0 3px #f33, 0 0 6px #f33; /* Neon glow */
+  color: #f33; 
+  font-weight: 900; 
+  text-shadow: 0 0 3px #f33, 0 0 6px #f33; 
   margin: 20px 0;
   font-size: 1.5em; 
 }
 .navbar a.active {
-  color: #f33; /* Neon red for active link */
+  color: #f33; 
   font-weight: bold;
-  border-bottom: 2px solid #f33; /* Optional underline effect */
+  border-bottom: 2px solid #f33; 
 }
