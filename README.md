@@ -30,7 +30,7 @@ LoadPilot is a Flask-based web dashboard built for trucking company dispatchers.
 
 | **Add Load** | **Edit Load** |
 |--------------|------------------------|
-| ![Add Load](screenshots/add_load.jpeg) | ![VS Code](screenshots/edit_load.png) |
+| ![Add Load](screenshots/add_load.jpeg) | ![Edit Load](screenshots/edit_load.jpeg) |
 
 ## 🚀 How to Run Locally
 # Clone the Repository
